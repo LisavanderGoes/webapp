@@ -1,15 +1,14 @@
-package com.lisa.View
+package com.lisa.view
 
+import com.lisa.main.extend.ControllerDiv
 import com.vaadin.flow.component.grid.Grid
 import com.vaadin.flow.component.orderedlayout.VerticalLayout
 import com.vaadin.flow.component.textfield.TextField
-import com.vaadin.flow.router.Route
 import com.vaadin.flow.data.value.ValueChangeMode
-
-
+import com.vaadin.flow.router.Route
 
 @Route("grid")
-class GridView: VerticalLayout() {
+class GridView: ControllerDiv() {
 
     private val list = arrayListOf(
             Data("name1", 1),
@@ -22,18 +21,20 @@ class GridView: VerticalLayout() {
             Data("name8", 8),
             Data("name9", 9)
     )
-    private val grid: Grid<Data> = Grid(com.lisa.View.Data::class.java)
+
+    private val layout = VerticalLayout()
+    private val grid: Grid<Data> = Grid(com.lisa.view.Data::class.java)
     private val filterTextField = TextField()
 
     init {
         grid.setColumns("number", "name")
 
         filterTextField.placeholder = "Filter by name..."
-        filterTextField.isClearButtonVisible = true
         filterTextField.valueChangeMode = ValueChangeMode.EAGER
         filterTextField.addValueChangeListener({ e -> updateList() })
 
-        add(filterTextField, grid)
+        layout.add(filterTextField, grid)
+        add(layout)
         setSizeFull()
 
 

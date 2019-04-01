@@ -1,16 +1,24 @@
-package com.lisa.View
+package com.lisa.view
 
-import com.lisa.Main.AuthenticationService
+import com.lisa.main.AuthenticationService
+import com.lisa.model.AuthenticationCredentials
+import com.vaadin.flow.component.UI
 import com.vaadin.flow.component.button.Button
-import com.vaadin.flow.component.formlayout.FormLayout
+import com.vaadin.flow.component.html.Div
 import com.vaadin.flow.component.html.Label
 import com.vaadin.flow.component.orderedlayout.VerticalLayout
 import com.vaadin.flow.component.textfield.TextField
+import com.vaadin.flow.router.BeforeEnterEvent
+import com.vaadin.flow.router.BeforeEnterObserver
+import com.vaadin.flow.router.PageTitle
 import com.vaadin.flow.router.Route
-import com.vaadin.flow.server.VaadinSession
 
 @Route("login")
-class LoginView: FormLayout() {
+@PageTitle("Login")
+class LoginView: Div(), BeforeEnterObserver {
+    override fun beforeEnter(event: BeforeEnterEvent) {
+        event.navigationTarget
+    }
 
     private val authentication = AuthenticationService()
 
@@ -42,12 +50,7 @@ class LoginView: FormLayout() {
     }
 
     private fun loginSuccess() {
-        label.text = VaadinSession.getCurrent().getAttribute("currentUser") as String
+        UI.getCurrent().navigate(GridView::class.java)
     }
 
 }
-
-class AuthenticationCredentials(
-        val username: String,
-        val password: String
-)
