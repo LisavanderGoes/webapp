@@ -50,7 +50,7 @@ class LoginView: Div(), BeforeEnterObserver {
     }
 
     private fun loginSuccess() {
-        UI.getCurrent().navigate(GridView::class.java)
+        UI.getCurrent().navigate(MainView::class.java)
     }
 
 }
