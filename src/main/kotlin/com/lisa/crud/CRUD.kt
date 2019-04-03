@@ -1,5 +1,9 @@
 package com.lisa.crud
 
+import com.lisa.crud.annotation.Column
+import com.lisa.crud.annotation.ID
+import com.lisa.crud.annotation.Table
+
 class CRUD {
 
     fun <T> select(classType: Class<T>, conditions: String) : ArrayList<T> {
@@ -16,10 +20,11 @@ class CRUD {
         while (resultSet.next()) {
             val newItem = classType.getConstructor().newInstance()
 
-            for (field in classType.fields) {
+            for (field in classType.declaredFields) {
                 val column = field.getAnnotation(Column::class.java)
                 if (column != null) {
                     val item = resultSet.getObject(column.value)
+                    field.isAccessible = true
                     field.set(newItem, item)
                 }
             }
