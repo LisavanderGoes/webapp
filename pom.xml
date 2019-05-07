@@ -33,16 +33,7 @@
             <url>http://maven.vaadin.com/vaadin-addons</url>
         </repository>
 
-        <!-- Repository used by many Vaadin add-ons -->
-        <!--<repository>-->
-        <!--<id>Vaadin Directory</id>-->
-        <!--<url>http://maven.vaadin.com/vaadin-addons</url>-->
-        <!--</repository>-->
-        <!-- Repository needed for prerelease versions of Vaadin -->
-        <!--<repository>-->
-        <!--<id>vaadin-prereleases</id>-->
-        <!--<url>https://maven.vaadin.com/vaadin-prereleases</url>-->
-        <!--</repository>-->
+
     </repositories>
 
     <pluginRepositories>
@@ -52,12 +43,6 @@
             <url>https://repo1.maven.org/maven2/</url>
             <snapshots><enabled>false</enabled></snapshots>
         </pluginRepository>
-        <!-- Repository needed for prerelease versions of Vaadin -->
-        <!--<pluginRepository>-->
-        <!--<id>vaadin-prereleases</id>-->
-        <!--<url>https://maven.vaadin.com/vaadin-prereleases</url>-->
-        <!--<snapshots><enabled>false</enabled></snapshots>-->
-        <!--</pluginRepository>-->
     </pluginRepositories>
 
     <dependencyManagement>
@@ -116,23 +101,6 @@
             <version>5.1.39</version>
         </dependency>
 
-        <!--<dependency>-->
-        <!--<groupId>com.vaadin</groupId>-->
-        <!--<artifactId>vaadin-server</artifactId>-->
-        <!--</dependency>-->
-        <!--<dependency>-->
-        <!--<groupId>com.vaadin</groupId>-->
-        <!--<artifactId>vaadin-push</artifactId>-->
-        <!--</dependency>-->
-        <!--<dependency>-->
-        <!--<groupId>com.vaadin</groupId>-->
-        <!--<artifactId>vaadin-client-compiled</artifactId>-->
-        <!--</dependency>-->
-        <!--<dependency>-->
-        <!--<groupId>com.vaadin</groupId>-->
-        <!--<artifactId>flow-server</artifactId>-->
-        <!--<version>1.4.2</version>-->
-        <!--</dependency>-->
     </dependencies>
 
     <build>
@@ -173,17 +141,6 @@
                 <groupId>com.vaadin</groupId>
                 <artifactId>vaadin-maven-plugin</artifactId>
                 <version>${vaadin.plugin.version}</version>
-                <executions>
-                    <!--<execution>-->
-                    <!--<goals>-->
-                    <!--<goal>update-theme</goal>-->
-                    <!--<goal>update-widgetset</goal>-->
-                    <!--<goal>compile</goal>-->
-                    <!--&lt;!&ndash; Comment out compile-theme goal to use on-the-fly theme compilation &ndash;&gt;-->
-                    <!--<goal>compile-theme</goal>-->
-                    <!--</goals>-->
-                    <!--</execution>-->
-                </executions>
             </plugin>
         </plugins>
     </build>

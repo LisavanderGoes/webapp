@@ -4,47 +4,53 @@ import com.lisa.crud.annotation.Column
 import com.lisa.crud.annotation.ID
 import com.lisa.crud.annotation.Table
 
-class CRUD {
+class CRUD<T: Any> {
 
-    fun <T> select(classType: Class<T>, conditions: String) : ArrayList<T> {
+    fun select(classType: Class<T>, conditions: String) : ArrayList<T> {
         val connection = DatabaseConnection().databaseConnection
-
-        val tableName = classType.getAnnotation(Table::class.java).value
-        val query = "SELECT * FROM $tableName$conditions"
-
-        val statement = connection.prepareStatement(query)
-        val resultSet = statement.executeQuery()
 
         val objectList = ArrayList<T>()
 
-        while (resultSet.next()) {
-            val newItem = classType.getConstructor().newInstance()
+        try {
+            val tableName = classType.getAnnotation(Table::class.java).value
+            val query = "SELECT * FROM $tableName$conditions"
 
-            for (field in classType.declaredFields) {
-                val column = field.getAnnotation(Column::class.java)
-                if (column != null) {
-                    val item = resultSet.getObject(column.value)
-                    field.isAccessible = true
-                    field.set(newItem, item)
+            val statement = connection.prepareStatement(query)
+            val resultSet = statement.executeQuery()
+
+
+            while (resultSet.next()) {
+                val newItem = classType.getConstructor().newInstance()
+
+                for (field in classType.declaredFields) {
+                    val column = field.getAnnotation(Column::class.java)
+                    if (column != null) {
+                        val item = resultSet.getObject(column.value)
+                        field.isAccessible = true
+                        field.set(newItem, item)
+                    }
                 }
+                objectList.add(newItem)
             }
-            objectList.add(newItem)
-        }
 
-        resultSet.close()
-        statement.close()
-        connection.close()
+            resultSet.close()
+            statement.close()
+            connection.close()
+        } catch (e: Exception) {
+            Notification().open()
+        }
         return objectList
     }
 
-    fun <T: Any> update(foundClass: T, conditions: String) : Boolean {
+    fun update(foundClass: T, conditions: String) : Boolean {
         val connection = DatabaseConnection().databaseConnection
         val classType = foundClass::class.java
 
         val tableName = classType.getAnnotation(Table::class.java).value
 
         val marks = StringBuilder()
-        for (field in classType.fields) {
+        for (field in classType.declaredFields) {
+            field.isAccessible = true
             val column = field.getAnnotation(Column::class.java)
             if (column != null && field.getAnnotation(ID::class.java) == null) {
                 marks.append(column.value).append(" = '"+field.get(foundClass)+"'").append(",")
@@ -53,17 +59,23 @@ class CRUD {
         marks.deleteCharAt(marks.length - 1)
         val formattedMarks = marks.toString()
 
-        val query = "UPDATE $tableName SET $formattedMarks$conditions"
+        try {
 
-        val statement = connection.prepareStatement(query)
+            val query = "UPDATE $tableName SET $formattedMarks$conditions"
 
-        val rowUpdated = statement.executeUpdate() > 0
-        statement.close()
-        connection.close()
-        return rowUpdated
+            val statement = connection.prepareStatement(query)
+
+            val rowUpdated = statement.executeUpdate() > 0
+            statement.close()
+            connection.close()
+            return rowUpdated
+        } catch (e: Exception) {
+            Notification().open()
+        }
+        return false
     }
 
-    fun <T: Any> delete(foundClass: T) : Boolean {
+    fun delete(foundClass: T) : Boolean {
         val connection = DatabaseConnection().databaseConnection
         val classType = foundClass::class.java
 
@@ -73,17 +85,23 @@ class CRUD {
         val id = field.get(foundClass) as Long
         val query = "DELETE FROM $tableName WHERE id = ?"
 
-        val statement = connection.prepareStatement(query)
-        statement.setInt(1, id.toInt())
+        try {
 
-        val rowDeleted = statement.executeUpdate() > 0
+            val statement = connection.prepareStatement(query)
+            statement.setInt(1, id.toInt())
 
-        statement.close()
-        connection.close()
-        return rowDeleted
+            val rowDeleted = statement.executeUpdate() > 0
+
+            statement.close()
+            connection.close()
+            return rowDeleted
+        } catch (e: Exception) {
+            Notification().open()
+        }
+        return false
     }
 
-    fun <T: Any> insert(foundClass: T) : Boolean {
+    fun insert(foundClass: T) : Boolean {
         val connection = DatabaseConnection().databaseConnection
         val classType = foundClass::class.java
 
@@ -91,9 +109,10 @@ class CRUD {
 
         val values = StringBuilder()
         val columns = StringBuilder()
-        for (field in classType.fields) {
+        for (field in classType.declaredFields) {
             val column = field.getAnnotation(Column::class.java)
             if (column != null && field.getAnnotation(ID::class.java) == null) {
+                field.isAccessible = true
                 values.append("'"+field.get(foundClass)+"'").append(",")
                 columns.append(column.value).append(",")
             }
@@ -105,13 +124,19 @@ class CRUD {
 
         val query = "INSERT INTO $tableName ($formattedColumns) VALUES ($formattedValues)"
 
-        val statement = connection.prepareStatement(query)
+        try {
 
-        val rowInserted = statement.executeUpdate() > 0
+            val statement = connection.prepareStatement(query)
 
-        statement.close()
-        connection.close()
-        return rowInserted
+            val rowInserted = statement.executeUpdate() > 0
 
+            statement.close()
+            connection.close()
+            return rowInserted
+        } catch (e: Exception) {
+
+            Notification().open()
+        }
+        return false
     }
 }

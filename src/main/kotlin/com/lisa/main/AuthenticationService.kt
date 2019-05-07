@@ -1,6 +1,7 @@
 package com.lisa.main
 
 import com.lisa.model.AuthenticationCredentials
+import com.lisa.view.grid.model.Roles
 import com.vaadin.flow.server.VaadinSession
 
 
@@ -17,7 +18,5 @@ class AuthenticationService {
     }
 }
 
-enum class Roles {
-    ADMIN, USER
-}
+
 

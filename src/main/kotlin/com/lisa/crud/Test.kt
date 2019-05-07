@@ -1,8 +1,9 @@
 package com.lisa.crud
 
-import com.lisa.view.grid.model.GridModel
+import com.lisa.view.grid.model.TestGridModel
 import java.lang.reflect.InvocationTargetException
 import java.sql.SQLException
+import java.util.*
 
 class Test {
     companion object {
@@ -11,18 +12,16 @@ class Test {
         @JvmStatic
         fun main(args: Array<String>) {
 
-            System.out.println(CRUD().select(GridModel::class.java, " WHERE id= '1'")[0].name)
-            System.out.println(CRUD().select(GridModel::class.java, " WHERE id= '1'")[0].id)
+            val item = CRUD<TestGridModel>().select(TestGridModel::class.java, " WHERE id= '1'")[0]
 
-            val item = GridModel()
-            item.id = 2
-            item.name = "ravi"
+            item.number = 9.toDouble()
+            item.name = "doet het niet"
 
 //            System.out.println(CRUD().update(item, " WHERE id= '2'"))
 //
 //            System.out.println(CRUD().delete(item))
 
-            System.out.println(CRUD().insert(item))
+            System.out.println(CRUD<TestGridModel>().update(item, "WHERE id = '${item.id}'"))
         }
     }
 
